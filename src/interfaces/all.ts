@@ -8,3 +8,7 @@ export interface IAuthenticable {
   username: string;
   email: string;
 }
+
+export interface IUser extends ILogin {
+  username: string;
+}

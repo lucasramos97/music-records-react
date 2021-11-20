@@ -13,6 +13,7 @@ import AuthenticationService from '../../services/AuthenticationService';
 import UserService from '../../services/UserService';
 import Messages from '../../utils/Messages';
 import StringUtils from '../../utils/StringUtils';
+import CreateUser from './CreateUser';
 
 const Login = () => {
   const [login, setLogin] = useState<ILogin>({
@@ -21,6 +22,7 @@ const Login = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [spinLoader, setSpinLoader] = useState(false);
+  const [visibleCreateUser, setVisibleCreateUser] = useState(false);
   const toast = useRef(null);
   const navigate = useNavigate();
 
@@ -28,7 +30,7 @@ const Login = () => {
   const userService = new UserService();
 
   const openCreateUser = () => {
-    console.log('openCreateUser()');
+    setVisibleCreateUser(true);
   };
 
   const actionLogin = () => {
@@ -93,6 +95,7 @@ const Login = () => {
                 id="email"
                 value={login.email}
                 onChange={(e) => setLogin({ ...login, email: e.target.value })}
+                autoFocus={true}
                 aria-describedby="email-help"
                 className={
                   submitted && !login.email ? 'p-invalid p-d-block' : ''
@@ -116,7 +119,7 @@ const Login = () => {
                   setLogin({ ...login, password: e.target.value })
                 }
                 feedback={false}
-                toggleMask
+                toggleMask={true}
                 aria-describedby="password-help"
                 className={
                   submitted && !login.password ? 'p-invalid p-d-block' : ''
@@ -155,6 +158,10 @@ const Login = () => {
           </div>
         </div>
       </div>
+      <CreateUser
+        visible={visibleCreateUser}
+        setVisible={setVisibleCreateUser}
+      />
     </>
   );
 };
