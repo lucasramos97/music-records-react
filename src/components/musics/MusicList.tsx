@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { AxiosError } from 'axios';
 
 import { Toast } from 'primereact/toast';
+import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
@@ -9,6 +10,7 @@ import { ILazyParams, IMusic } from '../../interfaces/all';
 import MusicService from '../../services/MusicService';
 import NumberUtils from '../../utils/NumberUtils';
 import StringUtils from '../../utils/StringUtils';
+import MusicDialog from './MusicDialog';
 
 const MusicList = () => {
   const [loading, setLoading] = useState(false);
@@ -19,6 +21,8 @@ const MusicList = () => {
     page: 0,
     rows: 5,
   });
+  const [visibleMusicDialog, setVisibleMusicDialog] = useState(false);
+  const [titleMusicDialog, setTitleMusicDialog] = useState('');
   const toast = useRef(null);
 
   const musicService = new MusicService();
@@ -26,6 +30,11 @@ const MusicList = () => {
   useEffect(() => {
     loadLazyData();
   }, [lazyParams]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const openAdd = () => {
+    setTitleMusicDialog('Add Music');
+    setVisibleMusicDialog(true);
+  };
 
   const loadLazyData = () => {
     setLoading(true);
@@ -66,7 +75,18 @@ const MusicList = () => {
   return (
     <>
       <Toast ref={toast} />
+
       <h1>Music List</h1>
+
+      <div className="table-top-buttons">
+        <Button
+          label="Add"
+          onClick={openAdd}
+          className="p-button-primary"
+          icon="pi pi-plus"
+        />
+      </div>
+
       <DataTable
         value={musics}
         lazy={true}
@@ -100,6 +120,13 @@ const MusicList = () => {
         />
         <Column field="feat" header="Feat" body={featBodyTemplate} />
       </DataTable>
+
+      <MusicDialog
+        title={titleMusicDialog}
+        visible={visibleMusicDialog}
+        setVisible={setVisibleMusicDialog}
+        onSuccess={loadLazyData}
+      />
     </>
   );
 };

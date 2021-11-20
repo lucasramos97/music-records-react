@@ -115,7 +115,7 @@ const CreateUser = (props: Props) => {
               }
             />
             {submitted && !user.username && (
-              <small id="email-help" className="p-error p-d-block">
+              <small id="username-help" className="p-error p-d-block">
                 Username is required!
               </small>
             )}
@@ -148,7 +148,7 @@ const CreateUser = (props: Props) => {
               value={user.password}
               onChange={(e) => setUser({ ...user, password: e.target.value })}
               toggleMask={true}
-              aria-describedby="email-help"
+              aria-describedby="password-help"
               className={
                 submitted && !user.password ? 'p-invalid p-d-block' : ''
               }
