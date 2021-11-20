@@ -10,11 +10,28 @@ import 'primeflex/primeflex.css';
 import './index.css';
 
 import Login from './components/users/Login';
+import MusicList from './components/musics/MusicList';
+import RequireAuthentication from './components/utils/RequireAuthentication';
 
 ReactDOM.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<Login />} />
+      <Route
+        path="/"
+        element={
+          <RequireAuthentication>
+            <MusicList />
+          </RequireAuthentication>
+        }
+      />
+      <Route
+        path="/musics"
+        element={
+          <RequireAuthentication>
+            <MusicList />
+          </RequireAuthentication>
+        }
+      />
       <Route path="login" element={<Login />} />
     </Routes>
   </BrowserRouter>,

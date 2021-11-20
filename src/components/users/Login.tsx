@@ -38,18 +38,16 @@ const Login = () => {
       setSpinLoader(true);
       userService
         .login(login)
-        .then((authenticable) => {
-          authenticationService.setUser(authenticable);
+        .then((res) => {
+          authenticationService.setUser(res.data);
           navigate('/musics');
         })
-        .catch((err: AxiosError) =>
+        .catch((err: AxiosError) => {
           toast.current.show({
             severity: 'error',
             summary: 'Error',
             detail: err.response.data.message,
-          })
-        )
-        .finally(() => {
+          });
           setSubmitted(false);
           setSpinLoader(false);
         });
