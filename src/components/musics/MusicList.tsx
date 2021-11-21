@@ -21,7 +21,7 @@ import MusicFactory from '../../utils/MusicFactory';
 const MusicList = () => {
   const [loading, setLoading] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [musics, setMusics] = useState(null);
+  const [musics, setMusics] = useState<IMusic[]>([]);
   const [lazyParams, setLazyParams] = useState<ILazyParams>({
     first: 0,
     page: 0,

@@ -7,6 +7,8 @@ import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
+import RestoreMusics from './RestoreMusics';
+
 import { ILazyParams, IMusic } from '../../interfaces/all';
 import MusicService from '../../services/MusicService';
 import NumberUtils from '../../utils/NumberUtils';
@@ -15,16 +17,22 @@ import StringUtils from '../../utils/StringUtils';
 const DeletedMusicList = () => {
   const [loading, setLoading] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [musics, setMusics] = useState(null);
+  const [musics, setMusics] = useState<IMusic[]>([]);
   const [lazyParams, setLazyParams] = useState<ILazyParams>({
     first: 0,
     page: 0,
     rows: 5,
   });
+  const [selectedMusics, setSelectedMusics] = useState<IMusic[]>([]);
+  const [visibleRestore, setVisibleRestore] = useState(false);
   const toast = useRef(null);
   const navigate = useNavigate();
 
   const musicService = new MusicService();
+
+  const openRestore = () => {
+    setVisibleRestore(true);
+  };
 
   const goToMusicList = () => {
     navigate('/musics');
@@ -70,11 +78,24 @@ const DeletedMusicList = () => {
     return music.feat ? 'Yes' : 'No';
   };
 
+  const reloadMusics = () => {
+    setSelectedMusics([]);
+    loadMusics();
+  };
+
   return (
     <>
       <Toast ref={toast} />
       <h1>Deleted Music List</h1>
       <div className="table-top-buttons">
+        <Button
+          label="Restore"
+          onClick={openRestore}
+          disabled={selectedMusics.length === 0}
+          className="p-button-primary"
+          icon="pi pi-refresh"
+        />
+
         <Button
           label="Music List"
           onClick={goToMusicList}
@@ -85,6 +106,9 @@ const DeletedMusicList = () => {
 
       <DataTable
         value={musics}
+        selection={selectedMusics}
+        onSelectionChange={(e) => setSelectedMusics(e.value)}
+        dataKey="id"
         lazy={true}
         responsiveLayout="scroll"
         paginator={true}
@@ -97,6 +121,7 @@ const DeletedMusicList = () => {
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} musics"
       >
+        <Column selectionMode="multiple" headerStyle={{ width: '3em' }} />
         <Column field="title" header="Title" />
         <Column field="artist" header="Artist" />
         <Column
@@ -116,6 +141,13 @@ const DeletedMusicList = () => {
         />
         <Column field="feat" header="Feat" body={featBodyTemplate} />
       </DataTable>
+
+      <RestoreMusics
+        musics={selectedMusics}
+        onSuccess={reloadMusics}
+        visible={visibleRestore}
+        setVisible={setVisibleRestore}
+      />
     </>
   );
 };

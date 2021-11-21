@@ -60,4 +60,12 @@ export default class MusicService {
       this.HTTP_OPTIONS
     );
   }
+
+  public restoreMusics(musics: IMusic[]): Promise<AxiosResponse<number>> {
+    return axios.post<AxiosResponse<number>, any>(
+      `${this.URL}/deleted/restore`,
+      musics,
+      this.HTTP_OPTIONS
+    );
+  }
 }
