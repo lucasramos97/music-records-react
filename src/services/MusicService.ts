@@ -75,4 +75,11 @@ export default class MusicService {
       this.HTTP_OPTIONS
     );
   }
+
+  public emptyList(): Promise<AxiosResponse<number>> {
+    return axios.delete<AxiosResponse<number>, any>(
+      `${this.URL}/empty-list`,
+      this.HTTP_OPTIONS
+    );
+  }
 }

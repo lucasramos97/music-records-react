@@ -9,6 +9,7 @@ import { Column } from 'primereact/column';
 
 import RestoreMusics from './RestoreMusics';
 import DefinitiveDeleteMusic from './DefinitiveDeleteMusic';
+import EmptyList from './EmptyList';
 
 import { ILazyParams, IMusic } from '../../interfaces/all';
 import MusicService from '../../services/MusicService';
@@ -31,6 +32,7 @@ const DeletedMusicList = () => {
   const [musicToDelete, setMusicToDelete] = useState(
     MusicFactory.createDefaultMusic()
   );
+  const [visibleEmptyList, setVisibleEmptyList] = useState(false);
   const toast = useRef(null);
   const navigate = useNavigate();
 
@@ -108,6 +110,10 @@ const DeletedMusicList = () => {
     setVisibleDefinitiveDelete(true);
   };
 
+  const openEmptyList = () => {
+    setVisibleEmptyList(true);
+  };
+
   return (
     <>
       <Toast ref={toast} />
@@ -119,6 +125,14 @@ const DeletedMusicList = () => {
           disabled={selectedMusics.length === 0}
           className="p-button-primary"
           icon="pi pi-refresh"
+        />
+
+        <Button
+          label="Empty List"
+          onClick={openEmptyList}
+          disabled={musics.length === 0}
+          className="p-button-danger"
+          icon="pi pi-ban"
         />
 
         <Button
@@ -184,6 +198,12 @@ const DeletedMusicList = () => {
         onSuccess={reloadMusics}
         visible={visibleDefinitiveDelete}
         setVisible={setVisibleDefinitiveDelete}
+      />
+
+      <EmptyList
+        onSuccess={reloadMusics}
+        visible={visibleEmptyList}
+        setVisible={setVisibleEmptyList}
       />
     </>
   );
