@@ -8,11 +8,13 @@ import { Column } from 'primereact/column';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Tooltip } from 'primereact/tooltip';
 
+import MusicDialog from './MusicDialog';
+import DeleteMusic from './DeleteMusic';
+
 import { ILazyParams, IMusic } from '../../interfaces/all';
 import MusicService from '../../services/MusicService';
 import NumberUtils from '../../utils/NumberUtils';
 import StringUtils from '../../utils/StringUtils';
-import MusicDialog from './MusicDialog';
 import MusicFactory from '../../utils/MusicFactory';
 
 const MusicList = () => {
@@ -27,6 +29,10 @@ const MusicList = () => {
   const [visibleMusicDialog, setVisibleMusicDialog] = useState(false);
   const [titleMusicDialog, setTitleMusicDialog] = useState('');
   const [music, setMusic] = useState(MusicFactory.createDefaultMusic());
+  const [visibleDeleteMusic, setVisibleDeleteMusic] = useState(false);
+  const [musicToDelete, setMusicToDelete] = useState(
+    MusicFactory.createDefaultMusic()
+  );
   const toast = useRef(null);
 
   const musicService = new MusicService();
@@ -97,6 +103,25 @@ const MusicList = () => {
     setVisibleMusicDialog(true);
   };
 
+  const deleteMusicButton = (music: IMusic) => {
+    return (
+      <React.Fragment>
+        <Button
+          onClick={() => openDelete(music)}
+          tooltip="Delete Music"
+          tooltipOptions={{ position: 'left' }}
+          className="p-button-rounded p-button-danger"
+          icon="pi pi-trash"
+        />
+      </React.Fragment>
+    );
+  };
+
+  const openDelete = (music: IMusic) => {
+    setMusicToDelete(music);
+    setVisibleDeleteMusic(true);
+  };
+
   return (
     <>
       <Toast ref={toast} />
@@ -145,6 +170,7 @@ const MusicList = () => {
         />
         <Column field="feat" header="Feat" body={featBodyTemplate} />
         <Column header="Edit" exportable={false} body={editMusicButton} />
+        <Column header="Delete" exportable={false} body={deleteMusicButton} />
       </DataTable>
 
       <MusicDialog
@@ -153,6 +179,13 @@ const MusicList = () => {
         onSuccess={loadLazyData}
         visible={visibleMusicDialog}
         setVisible={setVisibleMusicDialog}
+      />
+
+      <DeleteMusic
+        music={musicToDelete}
+        onSuccess={loadLazyData}
+        visible={visibleDeleteMusic}
+        setVisible={setVisibleDeleteMusic}
       />
     </>
   );
