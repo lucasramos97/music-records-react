@@ -20,6 +20,14 @@ export default class MusicFactory {
     };
   }
 
+  public static createEditMusic(music: IMusic): IMusic {
+    return {
+      ...music,
+      release_date: this.formatEditReleaseDate(music.release_date),
+      duration: this.formatEditDuration(music.duration),
+    };
+  }
+
   public static formatSubmittedReleaseDate(releaseDate: string): string {
     const splitReleaseDate = releaseDate.split('/');
     const day = splitReleaseDate[0];
@@ -41,5 +49,18 @@ export default class MusicFactory {
     }
 
     return 0;
+  }
+
+  private static formatEditReleaseDate(releaseDate: string): string {
+    const splitReleaseDate = releaseDate.split('-');
+    const day = splitReleaseDate[2];
+    const month = splitReleaseDate[1];
+    const year = splitReleaseDate[0];
+
+    return `${day}/${month}/${year}`;
+  }
+
+  private static formatEditDuration(duration: string): string {
+    return duration.slice(3);
   }
 }

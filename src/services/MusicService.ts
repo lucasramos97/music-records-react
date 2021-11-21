@@ -28,4 +28,12 @@ export default class MusicService {
       this.HTTP_OPTIONS
     );
   }
+
+  public update(music: IMusic): Promise<AxiosResponse<IMusic>> {
+    return axios.put<AxiosResponse<IMusic>, any>(
+      `${this.URL}/${music.id}`,
+      music,
+      this.HTTP_OPTIONS
+    );
+  }
 }

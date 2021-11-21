@@ -5,12 +5,15 @@ import { Toast } from 'primereact/toast';
 import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { Tooltip } from 'primereact/tooltip';
 
 import { ILazyParams, IMusic } from '../../interfaces/all';
 import MusicService from '../../services/MusicService';
 import NumberUtils from '../../utils/NumberUtils';
 import StringUtils from '../../utils/StringUtils';
 import MusicDialog from './MusicDialog';
+import MusicFactory from '../../utils/MusicFactory';
 
 const MusicList = () => {
   const [loading, setLoading] = useState(false);
@@ -23,6 +26,7 @@ const MusicList = () => {
   });
   const [visibleMusicDialog, setVisibleMusicDialog] = useState(false);
   const [titleMusicDialog, setTitleMusicDialog] = useState('');
+  const [music, setMusic] = useState(MusicFactory.createDefaultMusic());
   const toast = useRef(null);
 
   const musicService = new MusicService();
@@ -33,6 +37,7 @@ const MusicList = () => {
 
   const openAdd = () => {
     setTitleMusicDialog('Add Music');
+    setMusic(MusicFactory.createDefaultMusic());
     setVisibleMusicDialog(true);
   };
 
@@ -70,6 +75,26 @@ const MusicList = () => {
 
   const featBodyTemplate = (music: IMusic): string => {
     return music.feat ? 'Yes' : 'No';
+  };
+
+  const editMusicButton = (music: IMusic) => {
+    return (
+      <React.Fragment>
+        <Button
+          onClick={() => openEdit(music)}
+          tooltip="Edit Music"
+          tooltipOptions={{ position: 'left' }}
+          className="p-button-rounded p-button-primary"
+          icon="pi pi-pencil"
+        />
+      </React.Fragment>
+    );
+  };
+
+  const openEdit = (music: IMusic) => {
+    setTitleMusicDialog('Edit Music');
+    setMusic(MusicFactory.createEditMusic(music));
+    setVisibleMusicDialog(true);
   };
 
   return (
@@ -119,13 +144,15 @@ const MusicList = () => {
           body={numberViewsBodyTemplate}
         />
         <Column field="feat" header="Feat" body={featBodyTemplate} />
+        <Column header="Edit" exportable={false} body={editMusicButton} />
       </DataTable>
 
       <MusicDialog
         title={titleMusicDialog}
+        music={music}
+        onSuccess={loadLazyData}
         visible={visibleMusicDialog}
         setVisible={setVisibleMusicDialog}
-        onSuccess={loadLazyData}
       />
     </>
   );

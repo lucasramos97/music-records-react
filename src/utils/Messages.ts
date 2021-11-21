@@ -7,6 +7,8 @@ export default class Messages {
   public static readonly RELEASE_DATE_CANNOT_BE_FUTURE =
     'Release Date cannot be future!';
   public static readonly MUSIC_SUCCESSFULLY_ADDED = 'Music successfully added!';
+  public static readonly MUSIC_SUCCESSFULLY_EDITED =
+    'Music successfully edited!';
 
   public static getInvalidDate(date: string): string {
     return `'${date}' is not a valid date!`;

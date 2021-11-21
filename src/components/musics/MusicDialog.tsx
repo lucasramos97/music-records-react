@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { AxiosError } from 'axios';
 
 import { Toast } from 'primereact/toast';
@@ -16,56 +16,38 @@ import Messages from '../../utils/Messages';
 import MusicFactory from '../../utils/MusicFactory';
 
 interface Props {
+  title: string;
+  music: IMusic;
+  onSuccess(): void;
   visible: boolean;
   setVisible(val: boolean): void;
-  title: string;
-  onSuccess(): void;
 }
 
 const MusicDialog = (props: Props) => {
-  const [music, setMusic] = useState<IMusic>({
-    title: '',
-    artist: '',
-    release_date: '',
-    duration: '',
-    feat: false,
-  });
+  const [music, setMusic] = useState(MusicFactory.createDefaultMusic());
   const [submitted, setSubmitted] = useState(false);
   const [spinLoader, setSpinLoader] = useState(false);
   const toast = useRef(null);
 
   const musicService = new MusicService();
 
+  useEffect(() => {
+    setMusic(props.music);
+  }, [props.music]);
+
   const onHide = () => {
+    setSubmitted(false);
     props.setVisible(false);
   };
 
   const actionSave = () => {
     if (validMusic()) {
       setSpinLoader(true);
-      const submittedMusic = MusicFactory.createSubmittedMusic(music);
-      musicService
-        .save(submittedMusic)
-        .then(() => {
-          toast.current.show({
-            severity: 'success',
-            summary: 'Successfully',
-            detail: Messages.MUSIC_SUCCESSFULLY_ADDED,
-          });
-          setMusic(MusicFactory.createDefaultMusic());
-          props.onSuccess();
-        })
-        .catch((err: AxiosError) =>
-          toast.current.show({
-            severity: 'error',
-            summary: 'Error',
-            detail: err.response.data.message,
-          })
-        )
-        .finally(() => {
-          setSubmitted(false);
-          setSpinLoader(false);
-        });
+      if (music.id) {
+        editMusic();
+      } else {
+        saveMusic();
+      }
     } else {
       setSubmitted(true);
     }
@@ -110,6 +92,57 @@ const MusicDialog = (props: Props) => {
     }
 
     return true;
+  };
+
+  const saveMusic = () => {
+    const submittedMusic = MusicFactory.createSubmittedMusic(music);
+    musicService
+      .save(submittedMusic)
+      .then(() => {
+        toast.current.show({
+          severity: 'success',
+          summary: 'Successfully',
+          detail: Messages.MUSIC_SUCCESSFULLY_ADDED,
+        });
+        setMusic(MusicFactory.createDefaultMusic());
+        props.onSuccess();
+      })
+      .catch((err: AxiosError) =>
+        toast.current.show({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.response.data.message,
+        })
+      )
+      .finally(() => {
+        setSubmitted(false);
+        setSpinLoader(false);
+      });
+  };
+
+  const editMusic = () => {
+    const submittedMusic = MusicFactory.createSubmittedMusic(music);
+    musicService
+      .update(submittedMusic)
+      .then(() => {
+        toast.current.show({
+          severity: 'success',
+          summary: 'Successfully',
+          detail: Messages.MUSIC_SUCCESSFULLY_EDITED,
+        });
+        props.onSuccess();
+      })
+      .catch((err: AxiosError) =>
+        toast.current.show({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.response.data.message,
+        })
+      )
+      .finally(() => {
+        setSubmitted(false);
+        setSpinLoader(false);
+      });
   };
 
   return (
