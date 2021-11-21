@@ -11,6 +11,8 @@ export default class Messages {
     'Music successfully edited!';
   public static readonly MUSIC_SUCCESSFULLY_DELETED =
     'Music successfully deleted!';
+  public static readonly MUSIC_DEFINITELY_DELETED_SUCCESSFULLY =
+    'Music definitely deleted successfully!';
 
   public static getInvalidDate(date: string): string {
     return `'${date}' is not a valid date!`;

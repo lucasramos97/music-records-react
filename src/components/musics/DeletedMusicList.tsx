@@ -8,11 +8,13 @@ import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
 import RestoreMusics from './RestoreMusics';
+import DefinitiveDeleteMusic from './DefinitiveDeleteMusic';
 
 import { ILazyParams, IMusic } from '../../interfaces/all';
 import MusicService from '../../services/MusicService';
 import NumberUtils from '../../utils/NumberUtils';
 import StringUtils from '../../utils/StringUtils';
+import MusicFactory from '../../utils/MusicFactory';
 
 const DeletedMusicList = () => {
   const [loading, setLoading] = useState(false);
@@ -25,6 +27,10 @@ const DeletedMusicList = () => {
   });
   const [selectedMusics, setSelectedMusics] = useState<IMusic[]>([]);
   const [visibleRestore, setVisibleRestore] = useState(false);
+  const [visibleDefinitiveDelete, setVisibleDefinitiveDelete] = useState(false);
+  const [musicToDelete, setMusicToDelete] = useState(
+    MusicFactory.createDefaultMusic()
+  );
   const toast = useRef(null);
   const navigate = useNavigate();
 
@@ -81,6 +87,25 @@ const DeletedMusicList = () => {
   const reloadMusics = () => {
     setSelectedMusics([]);
     loadMusics();
+  };
+
+  const definitiveDeleteMusicButton = (music: IMusic) => {
+    return (
+      <React.Fragment>
+        <Button
+          onClick={() => openDefinitiveDelete(music)}
+          tooltip="Definitive Delete Music"
+          tooltipOptions={{ position: 'left' }}
+          className="p-button-rounded p-button-danger"
+          icon="pi pi-trash"
+        />
+      </React.Fragment>
+    );
+  };
+
+  const openDefinitiveDelete = (music: IMusic) => {
+    setMusicToDelete(music);
+    setVisibleDefinitiveDelete(true);
   };
 
   return (
@@ -140,6 +165,11 @@ const DeletedMusicList = () => {
           body={numberViewsBodyTemplate}
         />
         <Column field="feat" header="Feat" body={featBodyTemplate} />
+        <Column
+          header="Delete"
+          exportable={false}
+          body={definitiveDeleteMusicButton}
+        />
       </DataTable>
 
       <RestoreMusics
@@ -147,6 +177,13 @@ const DeletedMusicList = () => {
         onSuccess={reloadMusics}
         visible={visibleRestore}
         setVisible={setVisibleRestore}
+      />
+
+      <DefinitiveDeleteMusic
+        music={musicToDelete}
+        onSuccess={reloadMusics}
+        visible={visibleDefinitiveDelete}
+        setVisible={setVisibleDefinitiveDelete}
       />
     </>
   );

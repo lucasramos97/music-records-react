@@ -68,4 +68,11 @@ export default class MusicService {
       this.HTTP_OPTIONS
     );
   }
+
+  public definitiveDelete(musicId: number): Promise<AxiosResponse<void>> {
+    return axios.delete<AxiosResponse<void>, any>(
+      `${this.URL}/definitive/${musicId}`,
+      this.HTTP_OPTIONS
+    );
+  }
 }
