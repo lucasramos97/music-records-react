@@ -11,6 +11,7 @@ import { Tooltip } from 'primereact/tooltip';
 
 import MusicDialog from './MusicDialog';
 import DeleteMusic from './DeleteMusic';
+import LogoutDialog from '../utils/LogoutDialog';
 
 import { ILazyParams, IMusic } from '../../interfaces/all';
 import MusicService from '../../services/MusicService';
@@ -35,6 +36,7 @@ const MusicList = () => {
     MusicFactory.createDefaultMusic()
   );
   const [countDeletedMusics, setCountDeletedMusics] = useState(0);
+  const [visibleLogoutDialog, setVisibleLogoutDialog] = useState(false);
   const toast = useRef(null);
   const navigate = useNavigate();
 
@@ -53,6 +55,10 @@ const MusicList = () => {
 
   const goToDeletedMusicList = () => {
     navigate('/musics/deleted');
+  };
+
+  const openLogout = () => {
+    setVisibleLogoutDialog(true);
   };
 
   const loadCountDeletedMusics = () => {
@@ -172,6 +178,14 @@ const MusicList = () => {
             icon="pi pi-trash"
           />
         )}
+
+        <Button
+          label="Logout"
+          onClick={openLogout}
+          className="p-button-primary"
+          icon="pi pi-sign-out"
+          iconPos="right"
+        />
       </div>
 
       <DataTable
@@ -223,6 +237,11 @@ const MusicList = () => {
         onSuccess={onDeleteMusicSuccess}
         visible={visibleDeleteMusic}
         setVisible={setVisibleDeleteMusic}
+      />
+
+      <LogoutDialog
+        visible={visibleLogoutDialog}
+        setVisible={setVisibleLogoutDialog}
       />
     </>
   );
