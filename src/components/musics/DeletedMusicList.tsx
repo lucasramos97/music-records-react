@@ -7,6 +7,7 @@ import { Button } from 'primereact/button';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 
+import LoggedUser from '../utils/LoggedUser';
 import RestoreMusics from './RestoreMusics';
 import DefinitiveDeleteMusic from './DefinitiveDeleteMusic';
 import EmptyList from './EmptyList';
@@ -117,6 +118,7 @@ const DeletedMusicList = () => {
   return (
     <>
       <Toast ref={toast} />
+      <LoggedUser />
       <h1>Deleted Music List</h1>
       <div className="table-top-buttons">
         <Button

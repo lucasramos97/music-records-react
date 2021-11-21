@@ -9,6 +9,7 @@ import { Column } from 'primereact/column';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Tooltip } from 'primereact/tooltip';
 
+import LoggedUser from '../utils/LoggedUser';
 import MusicDialog from './MusicDialog';
 import DeleteMusic from './DeleteMusic';
 import LogoutDialog from '../utils/LogoutDialog';
@@ -159,6 +160,7 @@ const MusicList = () => {
   return (
     <>
       <Toast ref={toast} />
+      <LoggedUser />
       <h1>Music List</h1>
       <div className="table-top-buttons">
         <Button
