@@ -33,12 +33,14 @@ const MusicList = () => {
   const [musicToDelete, setMusicToDelete] = useState(
     MusicFactory.createDefaultMusic()
   );
+  const [countDeletedMusics, setCountDeletedMusics] = useState(0);
   const toast = useRef(null);
 
   const musicService = new MusicService();
 
   useEffect(() => {
-    loadLazyData();
+    loadCountDeletedMusics();
+    loadMusics();
   }, [lazyParams]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const openAdd = () => {
@@ -47,7 +49,22 @@ const MusicList = () => {
     setVisibleMusicDialog(true);
   };
 
-  const loadLazyData = () => {
+  const loadCountDeletedMusics = () => {
+    musicService
+      .countDeleted()
+      .then((res) => {
+        setCountDeletedMusics(res.data);
+      })
+      .catch((err: AxiosError) =>
+        toast.current.show({
+          severity: 'error',
+          summary: 'Error',
+          detail: err.response.data.message,
+        })
+      );
+  };
+
+  const loadMusics = () => {
     setLoading(true);
     setTimeout(() => {
       musicService
@@ -122,12 +139,15 @@ const MusicList = () => {
     setVisibleDeleteMusic(true);
   };
 
+  const onDeleteMusicSuccess = () => {
+    loadCountDeletedMusics();
+    loadMusics();
+  };
+
   return (
     <>
       <Toast ref={toast} />
-
       <h1>Music List</h1>
-
       <div className="table-top-buttons">
         <Button
           label="Add"
@@ -135,6 +155,16 @@ const MusicList = () => {
           className="p-button-primary"
           icon="pi pi-plus"
         />
+
+        {countDeletedMusics > 0 && (
+          <Button
+            label="Deleted Music List"
+            badge={countDeletedMusics.toString()}
+            badgeClassName="p-badge-danger"
+            className="p-button-primary"
+            icon="pi pi-trash"
+          />
+        )}
       </div>
 
       <DataTable
@@ -176,14 +206,14 @@ const MusicList = () => {
       <MusicDialog
         title={titleMusicDialog}
         music={music}
-        onSuccess={loadLazyData}
+        onSuccess={loadMusics}
         visible={visibleMusicDialog}
         setVisible={setVisibleMusicDialog}
       />
 
       <DeleteMusic
         music={musicToDelete}
-        onSuccess={loadLazyData}
+        onSuccess={onDeleteMusicSuccess}
         visible={visibleDeleteMusic}
         setVisible={setVisibleDeleteMusic}
       />

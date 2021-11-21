@@ -43,4 +43,11 @@ export default class MusicService {
       this.HTTP_OPTIONS
     );
   }
+
+  public countDeleted(): Promise<AxiosResponse<number>> {
+    return axios.get<AxiosResponse<number>, any>(
+      `${this.URL}/deleted/count`,
+      this.HTTP_OPTIONS
+    );
+  }
 }
