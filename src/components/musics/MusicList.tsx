@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AxiosError } from 'axios';
 
 import { Toast } from 'primereact/toast';
@@ -35,6 +36,7 @@ const MusicList = () => {
   );
   const [countDeletedMusics, setCountDeletedMusics] = useState(0);
   const toast = useRef(null);
+  const navigate = useNavigate();
 
   const musicService = new MusicService();
 
@@ -47,6 +49,10 @@ const MusicList = () => {
     setTitleMusicDialog('Add Music');
     setMusic(MusicFactory.createDefaultMusic());
     setVisibleMusicDialog(true);
+  };
+
+  const goToDeletedMusicList = () => {
+    navigate('/musics/deleted');
   };
 
   const loadCountDeletedMusics = () => {
@@ -159,6 +165,7 @@ const MusicList = () => {
         {countDeletedMusics > 0 && (
           <Button
             label="Deleted Music List"
+            onClick={goToDeletedMusicList}
             badge={countDeletedMusics.toString()}
             badgeClassName="p-badge-danger"
             className="p-button-primary"

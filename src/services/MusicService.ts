@@ -50,4 +50,14 @@ export default class MusicService {
       this.HTTP_OPTIONS
     );
   }
+
+  public getAllDeleted(
+    page = 1,
+    size = 5
+  ): Promise<AxiosResponse<IPagedMusics>> {
+    return axios.get<AxiosResponse<IPagedMusics>, any>(
+      `${this.URL}/deleted?page=${page}&size=${size}`,
+      this.HTTP_OPTIONS
+    );
+  }
 }
