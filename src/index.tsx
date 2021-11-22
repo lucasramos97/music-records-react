@@ -12,6 +12,7 @@ import './index.css';
 import Login from './components/users/Login';
 import MusicList from './components/musics/MusicList';
 import DeletedMusicList from './components/musics/DeletedMusicList';
+import NotFound from './components/utils/NotFound';
 
 import RequireAuthentication from './components/utils/RequireAuthentication';
 
@@ -43,6 +44,7 @@ ReactDOM.render(
         }
       />
       <Route path="login" element={<Login />} />
+      <Route path="*" element={<NotFound />} />
     </Routes>
   </BrowserRouter>,
   document.getElementById('root')
