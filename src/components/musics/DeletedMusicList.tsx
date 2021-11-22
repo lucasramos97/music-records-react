@@ -11,6 +11,7 @@ import LoggedUser from '../utils/LoggedUser';
 import RestoreMusics from './RestoreMusics';
 import DefinitiveDeleteMusic from './DefinitiveDeleteMusic';
 import EmptyList from './EmptyList';
+import SessionExpired from '../utils/SessionExpired';
 
 import { ILazyParams, IMusic } from '../../interfaces/all';
 import MusicService from '../../services/MusicService';
@@ -34,6 +35,7 @@ const DeletedMusicList = () => {
     MusicFactory.createDefaultMusic()
   );
   const [visibleEmptyList, setVisibleEmptyList] = useState(false);
+  const [visibleSessionExpired, setVisibleSessionExpired] = useState(false);
   const toast = useRef(null);
   const navigate = useNavigate();
 
@@ -61,14 +63,21 @@ const DeletedMusicList = () => {
           setTotalRecords(res.data.total);
           setLoading(false);
         })
-        .catch((err: AxiosError) =>
-          toast.current.show({
-            severity: 'error',
-            summary: 'Error',
-            detail: err.response.data.message,
-          })
-        );
+        .catch((err: AxiosError) => errorHandler(err));
     }, 1000);
+  };
+
+  const errorHandler = (err: AxiosError) => {
+    if (err.response.status === 401 && !visibleSessionExpired) {
+      setVisibleSessionExpired(true);
+      return;
+    }
+
+    toast.current.show({
+      severity: 'error',
+      summary: 'Error',
+      detail: err.response.data.message,
+    });
   };
 
   const releaseDateBodyTemplate = (music: IMusic): string => {
@@ -206,6 +215,11 @@ const DeletedMusicList = () => {
         onSuccess={reloadMusics}
         visible={visibleEmptyList}
         setVisible={setVisibleEmptyList}
+      />
+
+      <SessionExpired
+        visible={visibleSessionExpired}
+        setVisible={setVisibleSessionExpired}
       />
     </>
   );

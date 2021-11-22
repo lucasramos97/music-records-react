@@ -13,6 +13,7 @@ import LoggedUser from '../utils/LoggedUser';
 import MusicDialog from './MusicDialog';
 import DeleteMusic from './DeleteMusic';
 import LogoutDialog from '../utils/LogoutDialog';
+import SessionExpired from '../utils/SessionExpired';
 
 import { ILazyParams, IMusic } from '../../interfaces/all';
 import MusicService from '../../services/MusicService';
@@ -38,6 +39,7 @@ const MusicList = () => {
   );
   const [countDeletedMusics, setCountDeletedMusics] = useState(0);
   const [visibleLogoutDialog, setVisibleLogoutDialog] = useState(false);
+  const [visibleSessionExpired, setVisibleSessionExpired] = useState(false);
   const toast = useRef(null);
   const navigate = useNavigate();
 
@@ -68,13 +70,7 @@ const MusicList = () => {
       .then((res) => {
         setCountDeletedMusics(res.data);
       })
-      .catch((err: AxiosError) =>
-        toast.current.show({
-          severity: 'error',
-          summary: 'Error',
-          detail: err.response.data.message,
-        })
-      );
+      .catch((err: AxiosError) => errorHandler(err));
   };
 
   const loadMusics = () => {
@@ -87,14 +83,21 @@ const MusicList = () => {
           setTotalRecords(res.data.total);
           setLoading(false);
         })
-        .catch((err: AxiosError) =>
-          toast.current.show({
-            severity: 'error',
-            summary: 'Error',
-            detail: err.response.data.message,
-          })
-        );
+        .catch((err: AxiosError) => errorHandler(err));
     }, 1000);
+  };
+
+  const errorHandler = (err: AxiosError) => {
+    if (err.response.status === 401 && !visibleSessionExpired) {
+      setVisibleSessionExpired(true);
+      return;
+    }
+
+    toast.current.show({
+      severity: 'error',
+      summary: 'Error',
+      detail: err.response.data.message,
+    });
   };
 
   const releaseDateBodyTemplate = (music: IMusic): string => {
@@ -244,6 +247,11 @@ const MusicList = () => {
       <LogoutDialog
         visible={visibleLogoutDialog}
         setVisible={setVisibleLogoutDialog}
+      />
+
+      <SessionExpired
+        visible={visibleSessionExpired}
+        setVisible={setVisibleSessionExpired}
       />
     </>
   );
