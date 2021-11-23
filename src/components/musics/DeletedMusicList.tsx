@@ -9,8 +9,8 @@ import { Column } from 'primereact/column';
 
 import LoggedUser from '../utils/LoggedUser';
 import RestoreMusics from './RestoreMusics';
-import DefinitiveDeleteMusic from './DefinitiveDeleteMusic';
 import EmptyList from './EmptyList';
+import DefinitiveDeleteMusic from './DefinitiveDeleteMusic';
 import SessionExpired from '../utils/SessionExpired';
 
 import { ILazyParams, IMusic } from '../../interfaces/all';
@@ -43,6 +43,15 @@ const DeletedMusicList = () => {
 
   const openRestore = () => {
     setVisibleRestore(true);
+  };
+
+  const reloadMusics = () => {
+    setSelectedMusics([]);
+    loadMusics();
+  };
+
+  const openEmptyList = () => {
+    setVisibleEmptyList(true);
   };
 
   const goToMusicList = () => {
@@ -96,11 +105,6 @@ const DeletedMusicList = () => {
     return music.feat ? 'Yes' : 'No';
   };
 
-  const reloadMusics = () => {
-    setSelectedMusics([]);
-    loadMusics();
-  };
-
   const definitiveDeleteMusicButton = (music: IMusic) => {
     return (
       <React.Fragment>
@@ -118,10 +122,6 @@ const DeletedMusicList = () => {
   const openDefinitiveDelete = (music: IMusic) => {
     setMusicToDelete(music);
     setVisibleDefinitiveDelete(true);
-  };
-
-  const openEmptyList = () => {
-    setVisibleEmptyList(true);
   };
 
   return (
@@ -204,17 +204,17 @@ const DeletedMusicList = () => {
         setVisible={setVisibleRestore}
       />
 
+      <EmptyList
+        onSuccess={reloadMusics}
+        visible={visibleEmptyList}
+        setVisible={setVisibleEmptyList}
+      />
+
       <DefinitiveDeleteMusic
         music={musicToDelete}
         onSuccess={reloadMusics}
         visible={visibleDefinitiveDelete}
         setVisible={setVisibleDefinitiveDelete}
-      />
-
-      <EmptyList
-        onSuccess={reloadMusics}
-        visible={visibleEmptyList}
-        setVisible={setVisibleEmptyList}
       />
 
       <SessionExpired

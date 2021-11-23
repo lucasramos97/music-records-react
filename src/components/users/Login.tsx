@@ -8,12 +8,13 @@ import { InputText } from 'primereact/inputtext';
 import { Password } from 'primereact/password';
 import { Button } from 'primereact/button';
 
+import CreateUser from './CreateUser';
+
 import { ILogin } from '../../interfaces/all';
 import AuthenticationService from '../../services/AuthenticationService';
 import UserService from '../../services/UserService';
 import Messages from '../../utils/Messages';
 import StringUtils from '../../utils/StringUtils';
-import CreateUser from './CreateUser';
 
 const Login = () => {
   const [login, setLogin] = useState<ILogin>({

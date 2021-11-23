@@ -11,8 +11,8 @@ import { Tooltip } from 'primereact/tooltip';
 
 import LoggedUser from '../utils/LoggedUser';
 import MusicDialog from './MusicDialog';
-import DeleteMusic from './DeleteMusic';
 import LogoutDialog from '../utils/LogoutDialog';
+import DeleteMusic from './DeleteMusic';
 import SessionExpired from '../utils/SessionExpired';
 
 import { ILazyParams, IMusic } from '../../interfaces/all';

@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { AxiosError } from 'axios';
 
 import { Dialog } from 'primereact/dialog';
 import { Toast } from 'primereact/toast';
@@ -10,7 +11,6 @@ import { IUser } from '../../interfaces/all';
 import UserService from '../../services/UserService';
 import StringUtils from '../../utils/StringUtils';
 import Messages from '../../utils/Messages';
-import { AxiosError } from 'axios';
 
 interface Props {
   visible: boolean;
