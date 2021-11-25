@@ -88,16 +88,18 @@ const MusicList = () => {
   };
 
   const errorHandler = (err: AxiosError) => {
-    if (err.response.status === 401 && !visibleSessionExpired) {
+    if (err.response.status === 401) {
       setVisibleSessionExpired(true);
       return;
     }
 
-    toast.current.show({
-      severity: 'error',
-      summary: 'Error',
-      detail: err.response.data.message,
-    });
+    if (!visibleSessionExpired) {
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: err.response.data.message,
+      });
+    }
   };
 
   const releaseDateBodyTemplate = (music: IMusic): string => {

@@ -34,7 +34,7 @@ const SessionExpired = (props: Props) => {
     >
       <div className="p-fluid p-formgrid p-grid">
         <div className="p-field p-col-12">
-          <i className="pi pi-exclamation-triangle p-mr-3"></i>
+          <i className="pi pi-info-circle p-mr-3"></i>
           <span>Your session has expired, login again!</span>
         </div>
       </div>
